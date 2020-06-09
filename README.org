@@ -1,0 +1,70 @@
+#+TITLE: sax (scissor in Swedish)
+
+* Intro
+
+  =sax= is an intuitive way to find and execute your beloved shell commands.
+  =sax= is simillar to =history | grep <COMMAND>= and =!<HISTORY LINE NR>= but
+  provides you with a context. Instead of having =~/.bash_history= as the source
+  you have your own awesome org document.
+
+  Showcase:
+
+  #+BEGIN_SRC shell :results output code
+    ~ $ sax grep
+    56 ** Show network password
+    57
+    58    #+BEGIN_SRC shell :results output code
+    59      nmcli connection show <SSID> --show-secrets | grep 802-11-wireless-security.psk:
+    60    #+END_SRC
+    61
+    192 * grep
+    193
+    194   #+BEGIN_SRC sh
+    195     grep -rnw '/path/to/somewhere/' -e "pattern"
+    196     grep --include=\*.{c,h} -rnw '/path/to/somewhere/' -e "pattern"
+    197     grep --exclude-dir={dir1,dir2,*.dst} -rnw '/path/to/somewhere/' -e "pattern"
+    198   #+END_SRC
+    199
+    271 ** config files in /etc
+    272
+    273    #+BEGIN_SRC shell :results output code
+    274      pacman -Ql emacs | grep '/etc' |  sort | uniq
+    275    #+END_SRC
+    276
+    292 * timedatectl
+    293
+    294   List timezones
+    295
+    296   #+BEGIN_SRC shell :results output code
+    297     timedatectl list-timezones | grep Stockholm
+    298   #+END_SRC
+    299
+    ~ $ sax grep 297 | wl-copy                      # The line is not trimmed and added to clipboard
+    ~ $ timedatectl list-timezones | grep Stockholm # Command is pasted back in the shell
+  #+END_SRC
+
+  In the showcase we look for =grep= commands. We get a few hits. Some of them
+  are in places where =grep= is used together with other commands.
+
+* Install
+
+  Clone the repo to some place, in the examples it's cloned to: =~/git/sax=.
+
+  Set environment variable so you can reach =sax=. Point =SAXFILE= to your org
+  file.
+
+  #+BEGIN_SRC shell :results output code
+    export PATH="$PATH:$HOME/.bin/:$HOME/git/sax/"
+    export AWKPATH="$AWKPATH:$HOME/git/sax/"
+    export SAXFILE="$HOME/org-documents/shell-commands.org"
+  #+END_SRC
+
+  You may need to logout and login again to update environment variables. Or
+  source your =.bashrc= using: =source ~/.bashrc=
+
+* Deep dive
+
+  =sax= is a small interface around =sax.awk=. =sax.awk= searches a single
+  document with a specific structure. The structure makes =sax.awk= able to know
+  what context to provide back to you. When you know what line you wanna get
+  hold on. =sax.awk= is there to provide it to you.

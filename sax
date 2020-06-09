@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# usage: sax grep
+# usage: sax grep 137
+
+
+if [ $# -eq 0 ]
+  then
+    less $SAXFILE
+fi
+
+if [ $# -eq 1 ]
+  then
+    awk -v search=$1 -f sax.awk $SAXFILE
+fi
+
+if [ $# -eq 2 ]
+  then
+    awk -v search=$1 -v selected_line=$2 -f sax.awk $SAXFILE
+fi
