@@ -1,3 +1,5 @@
+#!/usr/bin/awk -f
+#
 # sax.awk
 #
 # Search

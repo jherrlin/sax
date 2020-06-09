@@ -1,50 +1,92 @@
-#+TITLE: sax (scissor in Swedish)
+#+TITLE: =sax=
 
-* Intro
+* Overview and usage
 
-  =sax= is an intuitive way to find and execute your beloved shell commands.
-  =sax= is simillar to =history | grep <COMMAND>= and =!<HISTORY LINE NR>= but
-  provides you with a context. Instead of having =~/.bash_history= as the source
-  you have your own awesome org document.
+  =sax= (scissor in Swedish) is an intuitive way to find and execute your beloved shell
+  commands. =sax= is simillar to =history | grep <COMMAND>= and =!<HISTORY LINE NR>= but
+  provides you with a context. Instead of having =~/.bash_history= as the source you have
+  your own org document.
 
-  Showcase:
+  Here is an example org document with a couple of commands.
 
-  #+BEGIN_SRC shell :results output code
-    ~ $ sax grep
-    56 ** Show network password
-    57
-    58    #+BEGIN_SRC shell :results output code
-    59      nmcli connection show <SSID> --show-secrets | grep 802-11-wireless-security.psk:
-    60    #+END_SRC
-    61
-    192 * grep
-    193
-    194   #+BEGIN_SRC sh
-    195     grep -rnw '/path/to/somewhere/' -e "pattern"
-    196     grep --include=\*.{c,h} -rnw '/path/to/somewhere/' -e "pattern"
-    197     grep --exclude-dir={dir1,dir2,*.dst} -rnw '/path/to/somewhere/' -e "pattern"
-    198   #+END_SRC
-    199
-    271 ** config files in /etc
-    272
-    273    #+BEGIN_SRC shell :results output code
-    274      pacman -Ql emacs | grep '/etc' |  sort | uniq
-    275    #+END_SRC
-    276
-    292 * timedatectl
-    293
-    294   List timezones
-    295
-    296   #+BEGIN_SRC shell :results output code
-    297     timedatectl list-timezones | grep Stockholm
-    298   #+END_SRC
-    299
-    ~ $ sax grep 297 | wl-copy                      # The line is not trimmed and added to clipboard
-    ~ $ timedatectl list-timezones | grep Stockholm # Command is pasted back in the shell
+  #+BEGIN_SRC org
+    ,#+TITLE: My useful shell commands
+
+    ,* tar
+    ,** Compress entire directory or a single file
+
+       https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/
+
+       ,#+BEGIN_SRC shell
+         tar -czvf name-of-archive.tar.gz /path/to/directory-or-file
+       ,#+END_SRC
+
+    ,** Extract archive
+
+       ,#+BEGIN_SRC shell
+         tar -xzvf archive.tar.gz
+       ,#+END_SRC
+
+    ,* user management
+    ,** create new user
+
+       ,#+BEGIN_SRC shell
+        useradd -m -g users -G wheel,video <USER>
+       ,#+END_SRC
+
+    ,* top heading
+    ,** subheading
+    ,*** Some command
+
+        This is not a real command. Just here to show how that =sax= finds this section.
+
+        ,#+BEGIN_SRC shell
+          some command where tar is used
+        ,#+END_SRC
   #+END_SRC
 
-  In the showcase we look for =grep= commands. We get a few hits. Some of them
-  are in places where =grep= is used together with other commands.
+  Usage:
+
+  #+BEGIN_SRC shell :results output code
+    ~ $ sax tar
+    3 * tar
+    4 ** Compress entire directory or a single file
+    5
+    6    https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/
+    7
+    8    #+BEGIN_SRC shell
+    9      tar -czvf name-of-archive.tar.gz /path/to/directory-or-file
+    10    #+END_SRC
+    11
+    12 ** Extract archive
+    13
+    14    #+BEGIN_SRC shell
+    15      tar -xzvf archive.tar.gz
+    16    #+END_SRC
+    17
+    27 *** Some command
+    28
+    29     This is not a real command. Just here to show how that =sax= finds this section.
+    30
+    31     #+BEGIN_SRC shell
+    32       some command where tar is used
+    33     #+END_SRC
+    ~ $ sax tar 15 | wl-copy      # The line nr 15 is now trimmed and added to clipboard
+    ~ $ tar -xzvf archive.tar.gz  # Command is pasted back in the shell
+  #+END_SRC
+
+  In the showcase we look for =tar= commands as I never can remember the correct arguments
+  to extract an archive. We get a few hits. One of them is in a places where =tar= is used
+  together with another command. But the major one was a heading about =tar= and all of
+  its subsections.
+
+  If a heading containing the command is found it shows that full section,
+  including subsections.
+
+  If a match is found in a non heading, only that section is provided.
+
+  When you know what line you want you specify that an =sax= will return that. To be able
+  to use that command I pipe it to =wl-copy=. This makes is available in my clipbord.
 
 * Install
 
@@ -54,17 +96,10 @@
   file.
 
   #+BEGIN_SRC shell :results output code
-    export PATH="$PATH:$HOME/.bin/:$HOME/git/sax/"
+    export PATH="$PATH:$HOME/git/sax/"
     export AWKPATH="$AWKPATH:$HOME/git/sax/"
     export SAXFILE="$HOME/org-documents/shell-commands.org"
   #+END_SRC
 
   You may need to logout and login again to update environment variables. Or
   source your =.bashrc= using: =source ~/.bashrc=
-
-* Deep dive
-
-  =sax= is a small interface around =sax.awk=. =sax.awk= searches a single
-  document with a specific structure. The structure makes =sax.awk= able to know
-  what context to provide back to you. When you know what line you wanna get
-  hold on. =sax.awk= is there to provide it to you.
