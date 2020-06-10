@@ -2,12 +2,11 @@
 
 * Overview and usage
 
-  =sax= (scissor in Swedish) is an intuitive way to find and execute your beloved shell
-  commands. =sax= is simillar to =history | grep <COMMAND>= and =!<HISTORY LINE NR>= but
-  provides you with a context. Instead of having =~/.bash_history= as the source you have
-  your own org document.
+  =sax= (scissor in Swedish) is an intuitive way to find your beloved shell commands.
+  =sax= is somewhat similar to =history | grep <COMMAND>= but provides you with context.
+  Instead of having =~/.bash_history= as the source you have your own org document.
 
-  Here is an example org document with a couple of commands.
+  Here is an example org document with a couple of commands. This is our example source.
 
   #+BEGIN_SRC org
     ,#+TITLE: My useful shell commands
@@ -34,18 +33,18 @@
         useradd -m -g users -G wheel,video <USER>
        ,#+END_SRC
 
-    ,* top heading
-    ,** subheading
-    ,*** Some command
+    ,* random top heading
+    ,** random sub heading
+    ,*** some command
 
-        This is not a real command. Just here to show how that =sax= finds this section.
+        This is not a real command. Just here to show that =sax= finds this section.
 
         ,#+BEGIN_SRC shell
           some command where tar is used
         ,#+END_SRC
   #+END_SRC
 
-  Usage:
+  Example usage:
 
   #+BEGIN_SRC shell :results output code
     ~ $ sax tar
@@ -72,21 +71,22 @@
     32       some command where tar is used
     33     #+END_SRC
     ~ $ sax tar 15 | wl-copy      # The line nr 15 is now trimmed and added to clipboard
-    ~ $ tar -xzvf archive.tar.gz  # Command is pasted back in the shell
+    ~ $ tar -xzvf archive.tar.gz  # Command is pasted back in the shell from clipboard
   #+END_SRC
 
   In the showcase we look for =tar= commands as I never can remember the correct arguments
   to extract an archive. We get a few hits. One of them is in a places where =tar= is used
-  together with another command. But the major one was a heading about =tar= and all of
-  its subsections.
+  together with another command. But the major one is a heading matching =tar= and all of
+  its subsections. On line 15 is the command I am looking for. By running =sax= again with
+  the same argument + the line nr it returns that line. Trimmed and without a trailing
+  newline. This makes it perfect to pipe into a clipboard.
 
-  If a heading containing the command is found it shows that full section,
-  including subsections.
+  If a heading contains a match. Its returned together with all of its sub sections.
 
-  If a match is found in a non heading, only that section is provided.
+  If a match is found in a non heading line. Only that section is provided.
 
-  When you know what line you want you specify that an =sax= will return that. To be able
-  to use that command I pipe it to =wl-copy=. This makes is available in my clipbord.
+  =sax= does only 2 things. It looks for a pattern and tries to provide matches together
+  with their context. And it can provide a single line from a set of matches.
 
 * Install
 
