@@ -2,11 +2,13 @@
 #
 # sax.awk
 #
+# Find sections or a specific line in an org document.
+#
 # Search
-# usage: awk -f sax.awk -v search=grep ~/git/dotfiles/org/org/commands.org
+# usage: awk -f sax.awk -v search=grep ~/org/commands.org
 #
 # Get line
-# usage: awk -f sax.awk -v search=grep -v selected_line=175 ~/git/dotfiles/org/org/commands.org
+# usage: awk -f sax.awk -v search=grep -v selected_line=175 ~/org/commands.org
 
 function is_heading()       { return $1 ~ /^\*.*/ }
 function is_line_match()    { return $0 ~ search }
@@ -21,5 +23,6 @@ is_heading()                         { docopy=0 ; delete cache; cache[NR]=$0}
 
 END { if (selected_line) {
         gsub(/^[ \t]+|[ \t]$+/, "", saves[selected_line]) ; printf("%s", saves[selected_line]) }
-    else {
-        for (c in cache) { saves[c]=cache[c] }; for (s in saves) { print s, saves[s]}}}
+
+      else {
+          for (c in cache) { saves[c]=cache[c] }; for (s in saves) { print s, saves[s]}}}
