@@ -22,7 +22,9 @@ is_heading()  && docopy              { for (c in cache) { saves[c]=cache[c] }; }
 is_heading()                         { docopy=0 ; delete cache; cache[NR]=$0}
 
 END { if (selected_line) {
-        gsub(/^[ \t]+|[ \t]$+/, "", saves[selected_line]) ; printf("%s", saves[selected_line]) }
-
+        trim(saves[selected_line]) ; printf("%s", saves[selected_line]) }
       else {
-          for (c in cache) { saves[c]=cache[c] }; for (s in saves) { print s, saves[s]}}}
+        if (docopy)
+          { for (c in cache) { saves[c]=cache[c] }}}
+        for (s in saves)
+          { print s, saves[s]}}
