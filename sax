@@ -15,6 +15,12 @@ if [ $# -eq 1 ]
 fi
 
 if [ $# -eq 2 ]
-  then
-    awk -v search=$1 -v selected_line=$2 -f sax.awk $SAXFILE
+then
+    if [ -z "$SAXPIPE" ]
+    then
+        awk -v search=$1 -v selected_line=$2 -f sax.awk $SAXFILE
+    else
+        awk -v search=$1 -v selected_line=$2 -f sax.awk $SAXFILE | $SAXPIPE
+    fi
+
 fi

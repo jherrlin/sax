@@ -99,6 +99,7 @@
     export PATH="$PATH:$HOME/git/sax/"
     export AWKPATH="$AWKPATH:$HOME/git/sax/"
     export SAXFILE="$HOME/org-documents/shell-commands.org"
+    export SAXPIPE=wl-copy
   #+END_SRC
 
   You may need to logout and login again to update environment variables. Or
