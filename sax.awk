@@ -12,7 +12,8 @@
 
 function is_heading()       { return $1 ~ /^\*.*/ }
 function is_line_match()    { return $0 ~ search }
-function trim(n)            { gsub(/^[ \t]+|[ \t]$+/, "", saves[n]) }
+function remove_comment(n)  { gsub(/#[ \t]+.*$/, "", saves[n]) }
+function trim(n)            { gsub(/^[ \t]+|[ \t]+$/, "", saves[n]) }
 
 $1 == header_level && header_match   { header_match=0 }
 is_heading()  && is_line_match()     { header_match=1; header_level=$1 }
@@ -22,6 +23,7 @@ is_heading()  && docopy              { for (c in cache) { saves[c]=cache[c] }; }
 is_heading()                         { docopy=0 ; delete cache; cache[NR]=$0}
 
 END { if (selected_line) {
+        remove_comment(selected_line)
         trim(selected_line)
         printf("%s", saves[selected_line]) }
       else {
