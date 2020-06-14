@@ -28,4 +28,4 @@ END { if (selected_line) {
         if (docopy)
           { for (c in cache) { saves[c]=cache[c] }}
         for (s in saves)
-          { print s, saves[s]}}}
+          { printf("%-5s|%s\n", s, saves[s])}}}
