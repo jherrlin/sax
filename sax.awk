@@ -19,15 +19,27 @@ $1 == header_level && header_match   { header_match=0 }
 is_heading()  && is_line_match()     { header_match=1; header_level=$1 }
 !header_match && is_line_match()     { docopy=1 }
 is_heading()  && docopy              { for (c in cache) { saves[c]=cache[c] }; }
-                                     { if (header_match) { saves[NR]=$0 } else { cache[NR]=$0 }}
-is_heading()                         { docopy=0 ; delete cache; cache[NR]=$0}
+                                     { if (header_match) { saves[NR]=$0 } else { cache[NR]=$0 } }
+is_heading()                         { docopy=0 ; delete cache; cache[NR]=$0 }
 
-END { if (selected_line) {
+END {
+    if (length(saves) == 0) {  # No matches found
+        exit 1
+    }
+    else if (selected_line && !(selected_line in saves == 1)) {  # Selected line is not in saves
+        exit 2
+    }
+    else if (selected_line && (selected_line in saves == 1)) {
         remove_comment(selected_line)
         trim(selected_line)
-        printf("%s", saves[selected_line]) }
-      else {
-        if (docopy)
-          { for (c in cache) { saves[c]=cache[c] }}
-        for (s in saves)
-          { printf("%-5s|%s\n", s, saves[s])}}}
+        printf("%s", saves[selected_line])
+    }
+    else {
+        if (docopy) {
+            for (c in cache) { saves[c]=cache[c] }
+        }
+        for (s in saves) {
+            printf("%-5s|%s\n", s, saves[s])
+        }
+    }
+}
