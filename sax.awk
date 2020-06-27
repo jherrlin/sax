@@ -2,13 +2,15 @@
 #
 # sax.awk
 #
-# Find sections or a specific line in an org document.
+# Find sections and rows containing a match in documents and optionally return a single
+# row.
 #
 # Search
-# usage: awk -f sax.awk -v search=grep ~/org/commands.org
+# usage: awk -f sax.awk -v search=grep ~/org/commands.org $HISTFILE
 #
 # Get line
-# usage: awk -f sax.awk -v search=grep -v selected_line=175 ~/org/commands.org
+# usage: awk -f sax.awk -v search=grep -v selected_line=175 ~/org/commands.org $HISTFILE
+#
 function is_org_file()      { return FILENAME ~ /.*\.org/ }
 function is_heading()       { return $1 ~ /^\*.*/ }
 function is_line_match()    { return $0 ~ search }
@@ -41,7 +43,7 @@ END {
             for (c in cache) { saves[c]=cache[c] }
         }
         for (s in saves) {
-            printf("%-5s|%s\n", s, saves[s])
+            printf("%-5s| %s\n", s, saves[s])
         }
     }
 }
