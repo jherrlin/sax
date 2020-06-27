@@ -3,24 +3,41 @@
 # usage: sax grep
 # usage: sax grep 137
 
+# find ~/git/dotfiles/ -type f -iname "*.org" -print | xargs echo | sed 's/ /,/g'
 
-if [ $# -eq 0 ]
-  then
-    less $SAXFILE
+FILES=$SAXFILE
+
+while getopts if: option
+do
+    case "${option}"
+    in
+        i) FILES=$FILES,$HISTFILE ;;
+        f) FILES=$FILES,$OPTARG ;;
+    esac
+done
+
+if [ -z "FILES" ]
+then
+    echo "No files are set. Exit"
+    exit 1
 fi
 
-if [ $# -eq 1 ]
-  then
-    awk -v search=$1 -f sax.awk $SAXFILE
+PARSED_FILES=`echo $FILES | sed 's/,/ /g'`
+
+SEARCH_STRING=${@:$OPTIND:1}
+SELECTED_LINE=${@:$OPTIND+1:1}
+
+if [ -n "$SEARCH_STRING" ] && [ -z "$SELECTED_LINE" ]
+then
+    awk -v search=$SEARCH_STRING -f sax.awk $PARSED_FILES
 fi
 
-if [ $# -eq 2 ]
+if [ -n "$SEARCH_STRING" ] && [ -n "$SELECTED_LINE" ]
 then
     if [ -z "$SAXPIPE" ]
     then
-        awk -v search=$1 -v selected_line=$2 -f sax.awk $SAXFILE
+        awk -v search=$SEARCH_STRING -v selected_line=$SELECTED_LINE -f sax.awk $PARSED_FILES
     else
-        awk -v search=$1 -v selected_line=$2 -f sax.awk $SAXFILE | $SAXPIPE
+        awk -v search=$SEARCH_STRING -v selected_line=$SELECTED_LINE -f sax.awk $PARSED_FILES | $SAXPIPE
     fi
-
 fi
