@@ -7,23 +7,44 @@
 
 FILES=$SAXFILE
 
-while getopts if: option
+usage(){
+    echo "sax [OPTION]... PATTERN [ROW NR]"
+    echo ""
+    echo "Options:"
+    echo ""
+    echo "  -h    show help"
+    echo "  -i    include \$HISTFILE in search files"
+    echo "  -f    append comma separated list of files to look in"
+    echo "  -q    remove \$SAXFILE from file list"
+    echo ""
+    echo "Example: sax find"
+    echo "Example: sax find 66"
+    echo "Example: sax -if \`find ~/git/dotfiles/ -type f -iname \"*.org\" -print | xargs echo | sed 's/ /,/g'\` awk"
+}
+
+while getopts qhif: option
 do
     case "${option}"
     in
+        q) FILES="" ;;
         i) FILES=$FILES,$HISTFILE ;;
         f) FILES=$FILES,$OPTARG ;;
+        h) usage; exit 1 ;;
     esac
 done
 
-if [ -z "FILES" ]
+if [[ $# -eq 0 ]] ; then
+    usage
+    exit 1
+fi
+
+if [ -z "$FILES" ]
 then
     echo "No files are set. Exit"
     exit 1
 fi
 
 PARSED_FILES=`echo $FILES | sed 's/,/ /g'`
-
 SEARCH_STRING=${@:$OPTIND:1}
 SELECTED_LINE=${@:$OPTIND+1:1}
 
