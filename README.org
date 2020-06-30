@@ -2,13 +2,44 @@
 
 * Overview and usage
 
-  !README is outdated!
-
   =sax= (scissor in Swedish) is an intuitive way to find your beloved shell commands.
-  =sax= is somewhat similar to =history | grep <COMMAND>= but provides you with context.
-  Instead of having =~/.bash_history= as the source you have your own org document.
+  =sax= is somewhat similar to =history | grep <COMMAND>= but is able to provide you with
+  context. Instead of only having =~/.bash_history= as the source you have your own set if
+  files.
 
-  Here is an example org document with a couple of commands. This is our example source.
+  Here is the usage help message.
+
+  #+BEGIN_SRC shell
+    ~ $ sax -h
+    sax [OPTION]... PATTERN [ROW NR]
+
+    Options:
+
+      -h    show help
+      -i    include $HISTFILE in search files
+      -f    append comma separated list of files to look in
+      -q    remove $SAXFILE from file list
+
+    Examples:
+      # Search for find in $SAXFILE and show all matches.
+      sax find
+
+      # Search for find in $SAXFILE and return row number 66.
+      sax find 66
+
+      # Search for find in $SAXFILE and $HISTFILE and return row number 66.
+      sax -i find 66
+
+      # Search for awk in /home/nils/.bash_history and return row nr 66. This is very similar to
+      # history awk | grep awk && !66
+      sax -qf /home/nils/.bash_history awk 66
+
+      # Search for awk in all .org files found in ~/git/dotfiles and $SAXFILE.
+      sax -f `find ~/git/dotfiles/ -type f -iname "*.org" -print | xargs echo | sed 's/ /,/g'` awk
+  #+END_SRC
+
+  Here is an example org document with a couple of commands. This is our example source
+  and the document path is set as the $SAXFILE environment variable.
 
   #+BEGIN_SRC org
     ,#+TITLE: My useful shell commands
