@@ -2,6 +2,8 @@
 
 * Overview and usage
 
+  !README is outdated!
+
   =sax= (scissor in Swedish) is an intuitive way to find your beloved shell commands.
   =sax= is somewhat similar to =history | grep <COMMAND>= but provides you with context.
   Instead of having =~/.bash_history= as the source you have your own org document.
