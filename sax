@@ -27,7 +27,7 @@ do
     case "${option}"
     in
         q) FILES="" ;;
-        i) FILES=$FILES,$HISTFILE ;;
+        i) FILES=$HISTFILE,$FILES ;;
         f) FILES=$FILES,$OPTARG ;;
         h) usage; exit 1 ;;
     esac
