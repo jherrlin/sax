@@ -43,7 +43,7 @@ END {
             for (c in cache) { saves[c]=cache[c] }
         }
         for (s in saves) {
-            printf("%-5s| %s\n", s, saves[s])
+            printf("%s | %s\n", s, saves[s])
         }
     }
 }
